@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace XmlFileHendler
+namespace TurtleXmlStorage
 {
-    public static class XmlHelper
+    public static class XmlStorage
     {
-		static XmlHelper()
+		static XmlStorage()
 		{
-			if (!XmlHelper.CheckFileExists())
+			if (!XmlStorage.CheckFileExists())
 			{
-				XmlHelper.CreateFile();
+				XmlStorage.CreateFile();
 			}
 
-			XmlHelper.Configurations = XmlHelper.GetXmlConfigurationFromFile();
+			XmlStorage.Configurations = XmlStorage.GetXmlConfigurationFromFile();
 		}
 
 	    public static string FileName { get { return "configuration.xml"; } }
 
-	    public static string FileFullPath {get { return string.Format("c:\\{0}", XmlHelper.FileName); }}
+	    public static string FileFullPath {get { return string.Format("c:\\{0}", XmlStorage.FileName); }}
 
 		public static XElement Configurations { get; set; }
 
@@ -34,7 +31,7 @@ namespace XmlFileHendler
 				// ReSharper disable ReplaceWithSingleCallToSingleOrDefault
 				// ReSharper disable PossibleNullReferenceException
 
-				var projectConfigurations = XmlHelper.Configurations
+				var projectConfigurations = XmlStorage.Configurations
 					.Element("projects")
 					.Elements("project")
 					.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == projectName); ;
@@ -51,15 +48,15 @@ namespace XmlFileHendler
 
 		public static void SaveConfiguration(string projectName, string configurationName, string configurationValue)
 		{
-			var projectConfigurations = XmlHelper.Configurations
+			var projectConfigurations = XmlStorage.Configurations
 									.Element("projects")
 									.Elements("project")
 									.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == projectName);
 			if (projectConfigurations == null)
 			{
 				// add <project name="peojectName"> section:
-				XmlHelper.Configurations.Element("projects").Add(new XElement("project", new XAttribute("name", projectName)));
-				projectConfigurations = XmlHelper.Configurations
+				XmlStorage.Configurations.Element("projects").Add(new XElement("project", new XAttribute("name", projectName)));
+				projectConfigurations = XmlStorage.Configurations
 									.Element("projects")
 									.Elements("project")
 									.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == projectName);
@@ -81,31 +78,31 @@ namespace XmlFileHendler
 				configuration.Value = configurationValue;
 			}
 
-			XmlHelper.SaveChanges();
+			XmlStorage.SaveChanges();
 		}
 
 		private static XElement GetXmlConfigurationFromFile()
 		{
-			if (!XmlHelper.CheckFileExists()) return null;
+			if (!XmlStorage.CheckFileExists()) return null;
 
-			return XElement.Load(XmlHelper.FileFullPath);
+			return XElement.Load(XmlStorage.FileFullPath);
 		}
 
 
 		private static bool CheckFileExists()
 		{
-			return File.Exists(XmlHelper.FileFullPath);
+			return File.Exists(XmlStorage.FileFullPath);
 		}
 
 		private static void CreateFile()
 		{
 			XElement xml = new XElement("configurations", new XElement("projects"));
-			xml.Save(XmlHelper.FileFullPath);
+			xml.Save(XmlStorage.FileFullPath);
 		}
 
 		private static void SaveChanges()
 		{
-			XmlHelper.Configurations.Save(XmlHelper.FileFullPath);
+			XmlStorage.Configurations.Save(XmlStorage.FileFullPath);
 		}
     }
 }

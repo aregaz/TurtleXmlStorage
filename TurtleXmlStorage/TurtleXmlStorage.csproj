@@ -7,8 +7,8 @@
     <ProjectGuid>{E8505D9C-E03E-466F-B663-16116BA59B16}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XmlFileHendler</RootNamespace>
-    <AssemblyName>XmlFileHendler</AssemblyName>
+    <RootNamespace>TurtleXmlStorage</RootNamespace>
+    <AssemblyName>TurlteXmlStorage</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="XmlHelper.cs" />
+    <Compile Include="XmlStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
