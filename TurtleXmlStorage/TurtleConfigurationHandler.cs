@@ -14,12 +14,21 @@ namespace TurtleXmlStorage
             
         }
 
-        public XElement GetEmptyXml()
+        public override string GetDefaultContent()
         {
             var xml = new XElement("configurations", new XElement("projects"));
-            return xml;
+            return xml.ToString();
         }
 
-        
+		public void SaveFile(XElement content)
+		{
+
+		}
+
+		public string GetPath()
+		{
+			var t = this.GetType();
+			return base.GetPath(t);
+		}
     }
 }

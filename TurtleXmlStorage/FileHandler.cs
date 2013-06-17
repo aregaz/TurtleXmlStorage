@@ -16,6 +16,7 @@ namespace TurtleXmlStorage
         public FileHandler(string fileName)
         {
             this.FileName = fileName;
+	        this.FilePath = this.GetPath(this.GetType()) + "\\" + fileName;
         }
 
         public string ReadFile()
@@ -38,17 +39,42 @@ namespace TurtleXmlStorage
 
         public void CreateFile()
         {
-            File.Create(this.FilePath);
+	        using (var fileStream = File.Create(this.FilePath))
+	        {
+		        using (var streamWriter = new StreamWriter(fileStream))
+		        {
+			        streamWriter.Write(this.GetDefaultContent());
+		        }
+	        }
         }
 
-        public bool IsFileExist()
+		public virtual string GetDefaultContent()
+		{
+			return "test";
+		}
+
+	    public bool IsFileExist()
         {
             return File.Exists(this.FilePath);
         }
 
-        public void SaveFile()
+        public void SaveFile(string content)
         {
-            
+			using (var outfile = new StreamWriter(this.FilePath))
+			{
+				outfile.Write(content);
+			}
         }
+
+		public string GetPath(Type type)
+		{
+			//get the full location of the assembly with DaoTests in it
+			string fullPath = System.Reflection.Assembly.GetAssembly(type).Location;
+
+			//get the folder that's in
+			string theDirectory = Path.GetDirectoryName(fullPath);
+
+			return theDirectory;
+		}
     }
 }
