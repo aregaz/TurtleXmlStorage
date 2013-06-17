@@ -15,5 +15,5 @@ TurtleXmlStorage.XmlStorage.SaveConfiguration("MyProject",
 ```
 
 I also plan to implement couple features in future:
-- [ ] Add configuration functionality (for example, change file path) as TurtleXmlStorage_Configuration.xml.
-- [ ] Separate file handling from XML handling.
+- [ ] Add configuration file TurtleXmlStorage_Configuration.xml (for example, change file path) where you can specify where to store configuration.xml - in MyDocuments folder or in solution folder.
+- [ ] Separate file handling from XML handling (refactoring).
