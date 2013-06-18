@@ -20,11 +20,6 @@ namespace TurtleXmlStorage
             return xml.ToString();
         }
 
-		public void SaveFile(XElement content)
-		{
-
-		}
-
 		public string GetPath()
 		{
 			var t = this.GetType();

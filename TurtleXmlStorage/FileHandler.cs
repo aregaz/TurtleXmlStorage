@@ -27,14 +27,16 @@ namespace TurtleXmlStorage
             }
 
             var fileContent = new StringBuilder();
-            var stream = File.OpenText(this.FilePath);
-            var contentLine = string.Empty;
-            while ((contentLine = stream.ReadLine()) != null)
-            {
-                fileContent.Append(contentLine);
-            }
+			using (var stream = File.OpenText(this.FilePath))
+	        {
+				var contentLine = string.Empty;
+				while ((contentLine = stream.ReadLine()) != null)
+				{
+					fileContent.Append(contentLine);
+				}
 
-            return fileContent.ToString();
+				return fileContent.ToString();
+	        }
         }
 
         public void CreateFile()

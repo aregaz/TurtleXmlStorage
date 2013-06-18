@@ -9,19 +9,12 @@ namespace TurtleXmlStorage
     {
 		static XmlStorage()
 		{
-			if (!XmlStorage.CheckFileExists())
-			{
-				XmlStorage.CreateFile();
-			}
-
-			XmlStorage.Configurations = XmlStorage.GetXmlConfigurationFromFile();
+			XmlStorage.FileHandler = new TurtleConfigurationHandler();
+			XmlStorage.Configurations = XmlStorage.LoadXmlConfigurationFromFile();
 		}
 
-	    public static string FileName { get { return "configuration.xml"; } }
-
-	    public static string FileFullPath {get { return string.Format("c:\\{0}", XmlStorage.FileName); }}
-
-		public static XElement Configurations { get; set; }
+	    public static XElement Configurations { get; set; }
+		public static TurtleConfigurationHandler FileHandler { get; set; }
 
 		public static string GetConfiguration(string projectName, string configurationName)
 		{
@@ -35,9 +28,15 @@ namespace TurtleXmlStorage
 					.Element("projects")
 					.Elements("project")
 					.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == projectName); ;
+
+				if (projectConfigurations == null) throw new NullReferenceException("Project with specified Project Name was not found.");
+
 				var configuration = projectConfigurations
 					.Elements("configuration")
 					.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == configurationName);
+
+				if (configuration == null) throw new NullReferenceException("Configuration with specified Configuration Name was not found.");
+
 				return configuration.Value;
 			}
 			catch (Exception exc)
@@ -78,31 +77,18 @@ namespace TurtleXmlStorage
 				configuration.Value = configurationValue;
 			}
 
-			XmlStorage.SaveChanges();
+			XmlStorage.SaveXmlToFile();
 		}
 
-		private static XElement GetXmlConfigurationFromFile()
+		private static XElement LoadXmlConfigurationFromFile()
 		{
-			if (!XmlStorage.CheckFileExists()) return null;
-
-			return XElement.Load(XmlStorage.FileFullPath);
+			var fileContent = FileHandler.ReadFile();
+			return XElement.Parse(fileContent);
 		}
 
-
-		private static bool CheckFileExists()
+		private static void SaveXmlToFile()
 		{
-			return File.Exists(XmlStorage.FileFullPath);
-		}
-
-		private static void CreateFile()
-		{
-			XElement xml = new XElement("configurations", new XElement("projects"));
-			xml.Save(XmlStorage.FileFullPath);
-		}
-
-		private static void SaveChanges()
-		{
-			XmlStorage.Configurations.Save(XmlStorage.FileFullPath);
+			XmlStorage.FileHandler.SaveFile(XmlStorage.Configurations.ToString());
 		}
     }
 }
