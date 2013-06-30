@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TurtleXmlStorage;
 
 namespace TurtleStorageDebug
@@ -59,10 +54,10 @@ namespace TurtleStorageDebug
 			var projectName = Console.ReadLine();
 			Console.Write("> Enter configuration name: ");
 			var configurationName = Console.ReadLine();
-			
-			var configurationValue = XmlStorage.GetConfiguration(projectName, configurationName);
 
-			Console.WriteLine("\r\n\r\n> Configuration value:\r\n{0}", XmlStorage.GetConfiguration(projectName, configurationName));
+			var storage = new XmlStorage("proj1");
+
+			Console.WriteLine("\r\n\r\n> Configuration value:\r\n{0}", storage[configurationName]);
 			Console.ReadLine();
 		}
 
@@ -75,9 +70,10 @@ namespace TurtleStorageDebug
 			Console.Write("> Enter configuration value: ");
 			var configurationValue = Console.ReadLine();
 
-			XmlStorage.SaveConfiguration(projectName, configurationName, configurationValue);
+			var storage = new XmlStorage("TurtleStorageDebug");
+			storage[configurationName] = configurationValue;
 
-			Console.WriteLine("\r\n\r\n> Configuration value:\r\n{0}", XmlStorage.GetConfiguration(projectName, configurationName));
+			Console.WriteLine("\r\n\r\n> Configuration value:\r\n{0}", storage[configurationName]);
 			Console.ReadLine();
 		}
 	}

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileHandler.cs" />
+    <Compile Include="Singleton.cs" />
     <Compile Include="TurtleConfigurationHandler.cs" />
     <Compile Include="XmlStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

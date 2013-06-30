@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace TurtleXmlStorage
 {
@@ -52,7 +48,7 @@ namespace TurtleXmlStorage
 
 		public virtual string GetDefaultContent()
 		{
-			return "test";
+			return "PLease ovverride GetDefaultContent method.";
 		}
 
 	    public bool IsFileExist()
