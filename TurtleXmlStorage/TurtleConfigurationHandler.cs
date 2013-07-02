@@ -9,16 +9,30 @@ namespace TurtleXmlStorage
             
         }
 
-        public override string GetDefaultContent()
+		public XElement GetDefaultXML()
+		{
+			return new XElement("configurations", new XElement("projects"));
+		}
+
+        protected override string GetDefaultContent()
         {
-            var xml = new XElement("configurations", new XElement("projects"));
-            return xml.ToString();
+            return this.GetDefaultXML().ToString();
         }
 
-		public string GetPath()
+		private string GetPath()
 		{
 			var t = this.GetType();
 			return base.GetPath(t);
+		}
+
+		public new XElement ReadFile()
+		{
+			return XElement.Parse(base.ReadFile());
+		}
+
+		public void SaveFile(XElement configurations)
+		{
+			base.SaveFile(configurations.ToString());
 		}
     }
 }

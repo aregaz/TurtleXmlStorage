@@ -15,7 +15,7 @@ namespace TurtleXmlStorage
 	        this.FilePath = this.GetPath(this.GetType()) + "\\" + fileName;
         }
 
-        public string ReadFile()
+        public virtual string ReadFile()
         {
             if (!this.IsFileExist())
             {
@@ -35,7 +35,7 @@ namespace TurtleXmlStorage
 	        }
         }
 
-        public void CreateFile()
+        private void CreateFile()
         {
 	        using (var fileStream = File.Create(this.FilePath))
 	        {
@@ -46,17 +46,17 @@ namespace TurtleXmlStorage
 	        }
         }
 
-		public virtual string GetDefaultContent()
+		protected virtual string GetDefaultContent()
 		{
 			return "PLease ovverride GetDefaultContent method.";
 		}
 
-	    public bool IsFileExist()
+	    private bool IsFileExist()
         {
             return File.Exists(this.FilePath);
         }
 
-        public void SaveFile(string content)
+        protected virtual void SaveFile(string content)
         {
 			using (var outfile = new StreamWriter(this.FilePath))
 			{
@@ -64,7 +64,7 @@ namespace TurtleXmlStorage
 			}
         }
 
-		public string GetPath(Type type)
+		protected string GetPath(Type type)
 		{
 			//get the full location of the assembly with DaoTests in it
 			string fullPath = System.Reflection.Assembly.GetAssembly(type).Location;
