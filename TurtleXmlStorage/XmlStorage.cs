@@ -6,11 +6,32 @@ using System.Xml.Linq;
 
 namespace TurtleXmlStorage
 {
-	public class XmlStorage : Dictionary<string, string>, INotifyPropertyChanged
+	public class XmlStorage : Dictionary<string, string>
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
+		#region Singleton
 
-		public XmlStorage(string projectName)
+		private static readonly object lockObj = new object();
+		private static volatile XmlStorage mySingletonInstance;
+
+		public static XmlStorage GetInstace(string projectName)
+		{
+			if (mySingletonInstance == null)
+			{
+				lock (lockObj)
+				{
+					if (mySingletonInstance == null)
+					{
+						mySingletonInstance = new XmlStorage(projectName);
+					}
+				}
+			}
+
+			return mySingletonInstance;
+		}
+
+		#endregion
+
+		private XmlStorage(string projectName)
 		{
 			this.ProjectName = projectName;
 			this.FileHandler = new TurtleConfigurationHandler();
@@ -31,30 +52,9 @@ namespace TurtleXmlStorage
 					}
 				}
 			}
-
-			this.PropertyChanged += this.OnPropertyChanged;
 		}
 
 
-		#region INotifyPropertyChanged
-
-		private void RaiseConfigurationChanged()
-		{
-			if (this.PropertyChanged != null)
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs("Color"));
-			}
-		}
-
-		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			this.SaveXmlToFile();
-		}
-
-		#endregion
-
-
-		//public XElement Configurations { get; set; }
 		public TurtleConfigurationHandler FileHandler { get; set; }
 		public string ProjectName { get; private set; }
 
@@ -79,8 +79,8 @@ namespace TurtleXmlStorage
 		{
 			get
 			{
-				if (!this.ContainsKey(configurationName))
-					this.Add(configurationName, null);
+				//if (!this.ContainsKey(configurationName))
+				//	this.Add(configurationName, null);
 				return base[configurationName];
 			}
 
@@ -90,7 +90,7 @@ namespace TurtleXmlStorage
 					this.Add(configurationName, null);
 				base[configurationName] = value;
 
-				this.RaiseConfigurationChanged(); // TODO: can be changed to just Save() method
+				this.SaveXmlToFile();
 			}
 		}
 

@@ -55,10 +55,10 @@ namespace TurtleStorageDebug
 			Console.Write("> Enter configuration name: ");
 			var configurationName = Console.ReadLine();
 
-			var storage = new XmlStorage("proj1");
+			var storage = XmlStorage.GetInstace(projectName);
 
-			Console.WriteLine("\r\n\r\n> Configuration value:\r\n{0}", storage[configurationName]);
-			Console.ReadLine();
+			Console.WriteLine("\r\n\r\n> Configuration value: {0}\r\n", storage[configurationName]);
+			//Console.ReadLine();
 		}
 
 		private static void SaveConfiguration()
@@ -70,7 +70,7 @@ namespace TurtleStorageDebug
 			Console.Write("> Enter configuration value: ");
 			var configurationValue = Console.ReadLine();
 
-			var storage = new XmlStorage("TurtleStorageDebug");
+			var storage = XmlStorage.GetInstace("TurtleStorageDebug");
 			storage[configurationName] = configurationValue;
 
 			Console.WriteLine("\r\n\r\n> Configuration value:\r\n{0}", storage[configurationName]);
