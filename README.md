@@ -1,20 +1,22 @@
 Turtle XML Storage
 ==================
 
-Simple configuration storage for your projects in single XML file with simple structure.
+Simple configuration storage in XML file with simple structure.
 
 Just add reference to TurtleXmlStorage.dll - and you can use it like this:
 
 ```C#
+// initialize storage instance (singleton):
+var storage = TurtleXmlStorage.XmlStorage.GetInstance("my-project-name");
+
 // get configuration:
-var configuration = TurtleXmlStorage.XmlStorage.GetConfiguration("MyProject", "MyConfigurationName");
+var configuration = storage["MyConfigurationName"];
 
 // save configuration:
-TurtleXmlStorage.XmlStorage.SaveConfiguration("MyProject",
-  "MyConfigurationName", "This is configuration value parameter");
+storage["MyConfigurationName"] = myConfigurationValue;
 ```
 
 I also plan to implement couple features in future:
 - [ ] Add configuration file TurtleXmlStorage_Configuration.xml (for example, change file path) where you can specify where to store configuration.xml - in MyDocuments folder or in solution folder.
-- [x] Separate file handling from XML handling (refactoring).
-- [ ] Store configurations in static variable (in memory) if it was already requested. This will minimize requests to the file. Optionaly an XML attribute can be added to the configuration XML element to indicate whether in-memory storing is required or not.
+- [ ] Implement storage configurability via parameters (e.g. saving)
+- [ ] Manual memory management
