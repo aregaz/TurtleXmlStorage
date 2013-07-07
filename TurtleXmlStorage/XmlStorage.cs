@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -8,6 +7,13 @@ namespace TurtleXmlStorage
 {
 	public class XmlStorage : Dictionary<string, string>
 	{
+		#region Fields
+
+		private SaveOption saveOption = SaveOption.EachTime;
+
+		#endregion
+
+
 		#region Singleton
 
 		private static readonly object lockObj = new object();
@@ -31,6 +37,9 @@ namespace TurtleXmlStorage
 
 		#endregion
 
+
+		#region Constructor
+
 		private XmlStorage(string projectName)
 		{
 			this.ProjectName = projectName;
@@ -45,8 +54,8 @@ namespace TurtleXmlStorage
 					if (configurationXML != null)
 					{
 						var key = configurationXML.Attribute("name") == null
-									  ? string.Empty
-									  : configurationXML.Attribute("name").Value;
+							          ? string.Empty
+							          : configurationXML.Attribute("name").Value;
 						var value = configurationXML.Value;
 						this.Add(key, value);
 					}
@@ -54,9 +63,21 @@ namespace TurtleXmlStorage
 			}
 		}
 
+		#endregion
+
+
+		#region Properties
 
 		public TurtleConfigurationHandler FileHandler { get; set; }
+
 		public string ProjectName { get; private set; }
+
+		public SaveOption SaveOption
+		{
+			get { return this.saveOption; }
+			set { this.saveOption = value; }
+		}
+
 
 		public XElement XML
 		{
@@ -75,6 +96,11 @@ namespace TurtleXmlStorage
 			}
 		}
 
+		#endregion
+
+
+		#region Indexer
+
 		public new string this[string configurationName]
 		{
 			get
@@ -90,73 +116,18 @@ namespace TurtleXmlStorage
 					this.Add(configurationName, null);
 				base[configurationName] = value;
 
-				this.SaveXmlToFile();
+				if (this.SaveOption == SaveOption.EachTime) this.SaveXmlToFile();
 			}
 		}
 
-		//public string GetConfiguration(string projectName, string configurationName)
-		//{
-		//	try
-		//	{
-		//		// ReSharper disable PossibleNullReferenceException
-		//		// ReSharper disable ReplaceWithSingleCallToSingleOrDefault
-		//		// ReSharper disable PossibleNullReferenceException
+		#endregion
 
-		//		var projectConfigurations = this.Configurations
-		//			.Element("projects")
-		//			.Elements("project")
-		//			.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == projectName); ;
 
-		//		if (projectConfigurations == null) throw new NullReferenceException("Project with specified Project Name was not found.");
+		public void SaveXmlToFile()
+		{
+			this.FileHandler.SaveFile(this.XML);
+		}
 
-		//		var configuration = projectConfigurations
-		//			.Elements("configuration")
-		//			.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == configurationName);
-
-		//		if (configuration == null) throw new NullReferenceException("Configuration with specified Configuration Name was not found.");
-
-		//		return configuration.Value;
-		//	}
-		//	catch (Exception exc)
-		//	{
-		//		throw exc;
-		//	}
-		//}
-
-		//public  void SaveConfiguration(string projectName, string configurationName, string configurationValue)
-		//{
-		//	var projectConfigurations = this.Configurations
-		//							.Element("projects")
-		//							.Elements("project")
-		//							.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == projectName);
-		//	if (projectConfigurations == null)
-		//	{
-		//		// add <project name="peojectName"> section:
-		//		this.Configurations.Element("projects").Add(new XElement("project", new XAttribute("name", projectName)));
-		//		projectConfigurations = this.Configurations
-		//							.Element("projects")
-		//							.Elements("project")
-		//							.SingleOrDefault(x => x.Attribute("name") != null && x.Attribute("name").Value == projectName);
-		//	}
-
-		//	var configuration = projectConfigurations
-		//		.Elements("configuration")
-		//		.SingleOrDefault(
-		//			x =>
-		//			x.Attribute("name") != null && x.Attribute("name").Value == configurationName);
-		//	if (configuration == null)
-		//	{
-		//		// add <configuration name="configurationName">configurationValue</configuration> to the project section:
-		//		projectConfigurations.Add(new XElement("configuration", new XAttribute("name", configurationName), configurationValue));
-		//	}
-		//	else
-		//	{
-		//		// update configuration:
-		//		configuration.Value = configurationValue;
-		//	}
-
-		//	this.SaveXmlToFile();
-		//}
 
 		private XElement LoadProjectConfigurationsXMLFromFile(string projectName)
 		{
@@ -173,11 +144,6 @@ namespace TurtleXmlStorage
 			{
 				return this.FileHandler.GetDefaultXML();
 			}
-		}
-
-		private void SaveXmlToFile()
-		{
-			this.FileHandler.SaveFile(this.XML);
 		}
 	}
 }

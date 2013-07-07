@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurations.cs" />
     <Compile Include="FileHandler.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="TurtleConfigurationHandler.cs" />
